@@ -185,7 +185,7 @@ const portfolio = {
 
             github: "",
 
-            demo: "",
+            demo: "https://alphasignalai.vercel.app/",
 
             overview:
                 "AI powered crypto market analysis platform using Smart Money Concepts and Binance API.",
