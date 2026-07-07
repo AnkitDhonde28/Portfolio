@@ -183,7 +183,7 @@ const portfolio = {
 
             image: "/projects/trading.png",
 
-            github: "",
+            github: "https://github.com/AnkitDhonde28/alpha-trading-platform",
 
             demo: "https://alphasignalai.vercel.app/",
 
