@@ -26,19 +26,13 @@ export default function About() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <div className="relative">
-              <div className="absolute inset-0 rounded-full bg-cyan-500/20 blur-[120px]" />
+            <div className="relative flex justify-center">
+              <div className="absolute h-96 w-96 rounded-full bg-cyan-500/20 blur-[140px]" />
 
               <img
                 src="/profile.png"
-                alt="Ankit Dhonde"
-                className="
-      relative
-      w-full
-      rounded-3xl
-      mix-blend-screen
-      drop-shadow-[0_0_60px_rgba(34,211,238,.4)]
-    "
+                alt="Cloud Illustration"
+                className="relative w-full max-w-[650px] object-contain drop-shadow-[0_0_80px_rgba(34,211,238,.45)]"
               />
             </div>
           </motion.div>
@@ -51,9 +45,16 @@ export default function About() {
             viewport={{ once: true }}
           >
 
-            <h3 className="text-4xl font-bold">
-              {portfolio.about.title}
-            </h3>
+            <div className="mb-6">
+              <span className="inline-flex rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-2 text-sm font-semibold text-cyan-400">
+                ☁️ Cloud & DevOps Engineer
+              </span>
+
+              <h3 className="mt-5 text-5xl font-black leading-tight">
+                Building
+                <span className="text-cyan-400"> Scalable Infrastructure</span>
+              </h3>
+            </div>
 
             <p className="mt-6 text-slate-400 leading-8">
               {portfolio.about.description}

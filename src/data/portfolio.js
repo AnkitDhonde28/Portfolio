@@ -51,7 +51,7 @@ const portfolio = {
         title: "Who I Am",
 
         description:
-            "AWS Certified Cloud & DevOps Engineer with over 2 years of experience managing production AWS infrastructure, automating deployments, and building cloud-native applications. Passionate about building scalable infrastructure and improving deployment reliability through automation.",
+            "AWS Certified Cloud & DevOps Engineer with 2+ years of experience building scalable cloud infrastructure, automating deployment workflows, and delivering reliable CI/CD pipelines. I specialize in AWS, Docker, Kubernetes, Terraform, Linux, and GitHub Actions, with a strong passion for Infrastructure as Code and cloud automation. My goal is to build secure, highly available, and efficient systems that simplify deployments, improve reliability, and enable teams to deliver software faste",
 
         highlights: [
             "AWS Cloud",
