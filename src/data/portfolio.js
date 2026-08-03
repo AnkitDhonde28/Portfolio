@@ -27,7 +27,7 @@ const portfolio = {
 
     stats: [
         {
-            value:2,
+            value:3,
             suffix:"+",
             title: "Years Experience",
         },
@@ -67,7 +67,7 @@ const portfolio = {
         cards: [
             {
                 title: "Experience",
-                value: "2+ Years",
+                value: "3+ Years",
             },
             {
                 title: "Location",
