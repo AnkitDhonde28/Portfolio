@@ -88,7 +88,7 @@ const portfolio = {
         {
             company: "Dusane Infotech",
             role: "Technical Engineer",
-            duration: "Nov 2022 – Jul 2025",
+            duration: "Nov 2022 – Jul 2026",
             location: "Mumbai, India",
 
             achievements: [
