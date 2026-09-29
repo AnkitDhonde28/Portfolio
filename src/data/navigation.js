@@ -6,6 +6,7 @@ const navigation = [
   { id: "projects", label: "Projects" },
   { id: "certifications", label: "Certificates" },
   { id: "contact", label: "Contact" },
+  { id: "learning", label: "Learning" },
 ];
 
 export default navigation;
