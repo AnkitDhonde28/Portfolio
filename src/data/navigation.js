@@ -4,9 +4,9 @@ const navigation = [
   { id: "experience", label: "Experience" },
   { id: "skills", label: "Skills" },
   { id: "projects", label: "Projects" },
+  { id: "learning", label: "Learning" },
   { id: "certifications", label: "Certificates" },
   { id: "contact", label: "Contact" },
-  { id: "learning", label: "Learning" },
 ];
 
 export default navigation;
