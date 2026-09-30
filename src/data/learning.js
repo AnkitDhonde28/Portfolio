@@ -24,7 +24,7 @@ const learning = [
       "Reconciliation",
     ],
 
-    linkedin: "#",
+    linkedin: "https://www.linkedin.com/feed/update/urn:li:activity:7510600561986293761/",
   },
 
   {
