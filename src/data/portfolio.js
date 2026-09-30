@@ -6,7 +6,7 @@ const portfolio = {
     badge: "AWS Certified Solutions Architect – Associate",
 
     description:
-        "AWS Certified Cloud & DevOps Engineer with 2+ years of experience managing production AWS infrastructure, automating deployments, and building scalable cloud-native solutions using AWS, Docker, Kubernetes, Terraform and CI/CD.",
+        "AWS Certified Cloud & DevOps Engineer with 3+ years of experience managing production AWS infrastructure, automating deployments, and building scalable cloud-native solutions using AWS, Docker, Kubernetes, Terraform and CI/CD.",
 
     typing: [
         "Cloud Engineer",
