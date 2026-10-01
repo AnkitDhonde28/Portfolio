@@ -1,10 +1,22 @@
 import { FaGithub, FaExternalLinkAlt } from "react-icons/fa";
 
 export default function ProjectCard({ project }) {
+  const visibleTechnologies =
+    project.technologies?.slice(0, 4) || [];
+
+  const remainingTechnologies = Math.max(
+    (project.technologies?.length || 0) - 4,
+    0
+  );
+
   return (
-    <div
+    <article
       className="
         group
+        flex
+        h-full
+        min-w-0
+        flex-col
         overflow-hidden
         rounded-3xl
         border
@@ -12,191 +24,378 @@ export default function ProjectCard({ project }) {
         bg-slate-900
         transition-all
         duration-500
-        hover:-translate-y-3
-        hover:border-cyan-400
-        hover:shadow-[0_0_60px_rgba(34,211,238,.18)]
+        hover:-translate-y-2
       "
-    >
-      {/* Browser Header */}
-      <div className="flex items-center gap-2 border-b border-slate-700 bg-slate-800 px-5 py-3">
-        <div className="h-3 w-3 rounded-full bg-red-500" />
-        <div className="h-3 w-3 rounded-full bg-yellow-500" />
-        <div className="h-3 w-3 rounded-full bg-green-500" />
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor =
+          "var(--theme-primary)";
 
-        <div className="ml-auto text-xs text-slate-400">
+        e.currentTarget.style.boxShadow =
+          "0 0 45px rgba(var(--theme-rgb), 0.14)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = "";
+        e.currentTarget.style.boxShadow = "";
+      }}
+    >
+      {/* =====================================================
+          BROWSER HEADER
+      ===================================================== */}
+
+      <div
+        className="
+          flex
+          h-11
+          shrink-0
+          items-center
+          gap-2
+          border-b
+          border-slate-700
+          bg-slate-800/90
+          px-4
+        "
+      >
+        <span className="h-2.5 w-2.5 rounded-full bg-red-500" />
+        <span className="h-2.5 w-2.5 rounded-full bg-yellow-500" />
+        <span className="h-2.5 w-2.5 rounded-full bg-green-500" />
+
+        <span className="ml-auto max-w-[55%] truncate text-[10px] text-slate-400 sm:text-xs">
           {project.title}
-        </div>
+        </span>
       </div>
 
-      {/* Project Image */}
-      <div className="relative overflow-hidden">
+      {/* =====================================================
+          PROJECT IMAGE
+      ===================================================== */}
+
+      <div className="relative h-[230px] shrink-0 overflow-hidden bg-slate-950 sm:h-[250px]">
         <img
           src={project.image}
           alt={project.title}
-          className="h-80 w-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-1"
+          className="
+            h-full
+            w-full
+            object-cover
+            object-top
+            transition-transform
+            duration-700
+            group-hover:scale-105
+          "
+          onError={(e) => {
+            e.currentTarget.style.display = "none";
+          }}
         />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent opacity-70" />
+        {/* Image gradient */}
 
-        {/* Hover Overlay */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 transition duration-500 group-hover:opacity-100">
+        <div
+          className="
+            pointer-events-none
+            absolute
+            inset-0
+            bg-gradient-to-t
+            from-slate-950/80
+            via-transparent
+            to-transparent
+          "
+        />
+
+        {/* Desktop hover */}
+
+        <div
+          className="
+            absolute
+            inset-0
+            hidden
+            items-center
+            justify-center
+            bg-slate-950/55
+            backdrop-blur-[2px]
+            opacity-0
+            transition-opacity
+            duration-300
+            sm:flex
+            group-hover:opacity-100
+          "
+        >
           <a
             href={project.demo}
             target="_blank"
             rel="noreferrer"
-            className="rounded-xl bg-cyan-500 px-6 py-3 font-semibold text-slate-950 shadow-xl transition hover:scale-105"
+            className="
+              flex
+              items-center
+              gap-2
+              rounded-xl
+              px-5
+              py-3
+              text-sm
+              font-semibold
+              text-white
+              transition-transform
+              duration-300
+              hover:scale-105
+            "
+            style={{
+              backgroundColor:
+                "var(--theme-primary)",
+              boxShadow:
+                "0 0 30px rgba(var(--theme-rgb), 0.35)",
+            }}
           >
-            Live Preview
+            <FaExternalLinkAlt />
+            View Live
           </a>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="p-8">
-        {/* Featured */}
-        <div className="mb-5 flex flex-wrap items-center gap-3">
+      {/* =====================================================
+          CONTENT
+      ===================================================== */}
+
+      <div
+        className="
+          flex
+          min-w-0
+          flex-1
+          flex-col
+          p-5
+          sm:p-6
+        "
+      >
+        {/* =================================================
+            BADGES
+        ================================================= */}
+
+        <div className="flex flex-wrap gap-2">
           {project.featured && (
-            <span className="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-cyan-300">
+            <span
+              className="
+                inline-flex
+                items-center
+                rounded-full
+                px-3
+                py-1.5
+                text-[10px]
+                font-bold
+                uppercase
+                tracking-wider
+              "
+              style={{
+                color: "var(--theme-primary)",
+                backgroundColor:
+                  "rgba(var(--theme-rgb), 0.10)",
+                border:
+                  "1px solid rgba(var(--theme-rgb), 0.25)",
+              }}
+            >
               ⭐ Featured
             </span>
           )}
 
           {project.category && (
-            <span className="rounded-full border border-violet-500/20 bg-violet-500/10 px-4 py-2 text-xs font-semibold text-violet-300">
+            <span
+              className="
+                inline-flex
+                items-center
+                rounded-full
+                px-3
+                py-1.5
+                text-[10px]
+                font-semibold
+                sm:text-xs
+              "
+              style={{
+                color: "var(--theme-primary)",
+                backgroundColor:
+                  "rgba(var(--theme-rgb), 0.08)",
+                border:
+                  "1px solid rgba(var(--theme-rgb), 0.20)",
+              }}
+            >
               {project.category}
             </span>
           )}
         </div>
 
-        {/* Title */}
-        <h2 className="text-3xl font-bold text-white">
+        {/* =================================================
+            TITLE
+        ================================================= */}
+
+        <h2
+          className="
+            mt-4
+            break-words
+            text-2xl
+            font-bold
+            leading-tight
+            text-white
+            sm:text-3xl
+          "
+        >
           {project.title}
         </h2>
 
-        {/* Overview */}
-        <p className="mt-5 leading-8 text-slate-400">
+        {/* =================================================
+            DESCRIPTION
+        ================================================= */}
+
+        <p
+          className="
+            mt-3
+            line-clamp-3
+            break-words
+            text-sm
+            leading-6
+            text-slate-400
+            sm:text-[15px]
+            sm:leading-7
+          "
+        >
           {project.overview}
         </p>
 
-        {/* Problem / Solution / Result */}
-        <div className="mt-10 grid gap-5 lg:grid-cols-3">
-          {/* Problem */}
-          <div className="rounded-2xl border border-red-500/20 bg-red-500/5 p-5 transition duration-300 hover:-translate-y-2 hover:border-red-400">
-            <h3 className="mb-3 text-lg font-semibold text-red-400">
-              🚩 Problem
-            </h3>
+        {/* =================================================
+            METRICS / HIGHLIGHTS
+        ================================================= */}
 
-            <p className="text-sm leading-7 text-slate-400">
-              {project.problem}
-            </p>
-          </div>
-
-          {/* Solution */}
-          <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-5 transition duration-300 hover:-translate-y-2 hover:border-cyan-400">
-            <h3 className="mb-3 text-lg font-semibold text-cyan-400">
-              💡 Solution
-            </h3>
-
-            <p className="text-sm leading-7 text-slate-400">
-              {project.solution}
-            </p>
-          </div>
-
-          {/* Result */}
-          <div className="rounded-2xl border border-green-500/20 bg-green-500/5 p-5 transition duration-300 hover:-translate-y-2 hover:border-green-400">
-            <h3 className="mb-3 text-lg font-semibold text-green-400">
-              📈 Result
-            </h3>
-
-            <p className="text-sm leading-7 text-slate-400">
-              {project.result}
-            </p>
-          </div>
-        </div>
-
-        {/* Highlights */}
-        <div className="mt-10">
-          <h3 className="mb-4 text-lg font-semibold text-white">
-            Highlights
-          </h3>
-
-          <div className="flex flex-wrap gap-3">
-            {project.metrics?.map((item) => (
+        {project.metrics?.length > 0 && (
+          <div className="mt-5 flex flex-wrap gap-2">
+            {project.metrics.slice(0, 3).map((item) => (
               <span
                 key={item}
-                className="rounded-full border border-green-500/20 bg-green-500/10 px-4 py-2 text-sm text-green-400"
+                className="
+                  rounded-lg
+                  border
+                  border-slate-700
+                  bg-slate-800/70
+                  px-2.5
+                  py-1.5
+                  text-[11px]
+                  leading-4
+                  text-slate-300
+                "
               >
-                ✔ {item}
+                <span
+                  className="mr-1"
+                  style={{
+                    color: "var(--theme-primary)",
+                  }}
+                >
+                  ✓
+                </span>
+                {item}
               </span>
             ))}
           </div>
-        </div>
+        )}
 
-        {/* Architecture */}
-        <div className="mt-10">
-          <h3 className="mb-4 text-lg font-semibold text-white">
-            Architecture
-          </h3>
+        {/* =================================================
+            TECHNOLOGIES
+        ================================================= */}
 
-          <div className="flex flex-wrap items-center gap-3">
-            {project.architecture?.map((item, index) => (
-              <div key={item} className="flex items-center gap-3">
-                <span className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-2 text-sm text-cyan-400">
-                  {item}
-                </span>
-
-                {index !== project.architecture.length - 1 && (
-                  <span className="text-cyan-400">→</span>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Technologies */}
-        <div className="mt-10">
-          <h3 className="mb-4 text-lg font-semibold text-white">
-            Technologies
-          </h3>
-
-          <div className="flex flex-wrap gap-3">
-            {project.technologies?.map((tech) => (
+        {project.technologies?.length > 0 && (
+          <div className="mt-5 flex flex-wrap gap-2">
+            {visibleTechnologies.map((tech) => (
               <span
                 key={tech}
-                className="rounded-full border border-violet-500/20 bg-violet-500/10 px-4 py-2 text-sm text-violet-300 transition duration-300 hover:border-violet-400"
+                className="
+                  rounded-lg
+                  border
+                  px-2.5
+                  py-1.5
+                  text-[11px]
+                  font-medium
+                  sm:text-xs
+                "
+                style={{
+                  color: "var(--theme-primary)",
+                  backgroundColor:
+                    "rgba(var(--theme-rgb), 0.07)",
+                  borderColor:
+                    "rgba(var(--theme-rgb), 0.18)",
+                }}
               >
                 {tech}
               </span>
             ))}
-          </div>
-        </div>
 
-        {/* Buttons */}
-        <div className="mt-12 flex flex-wrap gap-4">
+            {remainingTechnologies > 0 && (
+              <span
+                className="
+                  rounded-lg
+                  border
+                  border-slate-700
+                  bg-slate-800
+                  px-2.5
+                  py-1.5
+                  text-[11px]
+                  text-slate-400
+                  sm:text-xs
+                "
+              >
+                +{remainingTechnologies}
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* =================================================
+            ACTIONS
+        ================================================= */}
+
+        <div
+          className="
+            mt-auto
+            flex
+            flex-col
+            gap-2.5
+            pt-6
+            sm:flex-row
+          "
+        >
+          {/* GitHub */}
+
           <a
             href={project.github}
             target="_blank"
             rel="noreferrer"
             className="
               flex
+              flex-1
               items-center
+              justify-center
               gap-2
               rounded-xl
               border
-              border-white/10
+              border-slate-700
               bg-slate-800
-              px-6
+              px-4
               py-3
+              text-sm
+              font-medium
+              text-white
               transition-all
               duration-300
-              hover:-translate-y-1
-              hover:border-cyan-400
-              hover:bg-slate-700
+              hover:-translate-y-0.5
             "
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor =
+                "var(--theme-primary)";
+
+              e.currentTarget.style.color =
+                "var(--theme-primary)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "";
+              e.currentTarget.style.color = "";
+            }}
           >
             <FaGithub />
-            GitHub Repository
+            GitHub
           </a>
+
+          {/* Live Demo */}
 
           <a
             href={project.demo}
@@ -204,27 +403,40 @@ export default function ProjectCard({ project }) {
             rel="noreferrer"
             className="
               flex
+              flex-1
               items-center
+              justify-center
               gap-2
               rounded-xl
-              bg-gradient-to-r
-              from-cyan-500
-              to-blue-600
-              px-6
+              px-4
               py-3
+              text-sm
               font-semibold
               text-white
               transition-all
               duration-300
-              hover:-translate-y-1
-              hover:shadow-[0_0_35px_rgba(34,211,238,.35)]
+              hover:-translate-y-0.5
             "
+            style={{
+              background:
+                "linear-gradient(to right, var(--theme-primary), #2563eb)",
+              boxShadow:
+                "0 0 22px rgba(var(--theme-rgb), 0.18)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow =
+                "0 0 32px rgba(var(--theme-rgb), 0.35)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow =
+                "0 0 22px rgba(var(--theme-rgb), 0.18)";
+            }}
           >
             <FaExternalLinkAlt />
-            Live Preview
+            Live Demo
           </a>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

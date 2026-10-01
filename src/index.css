@@ -1,14 +1,160 @@
 @import "tailwindcss";
 
+/* =========================================================
+   GLOBAL THEME
+   ========================================================= */
+
+:root {
+  --theme-primary: #38bdf8;
+  --theme-rgb: 56, 189, 248;
+}
+
+/* =========================================================
+   GLOBAL RESET
+   ========================================================= */
+
 html {
   scroll-behavior: smooth;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
+  width: 100%;
+  max-width: 100%;
   background: #0f172a;
   color: white;
   font-family: Inter, sans-serif;
   overflow-x: hidden;
 }
 
+/* Prevent horizontal overflow from the React root */
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Predictable sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Images should never exceed their container */
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+/* Prevent long words/URLs from creating horizontal overflow */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a,
+span {
+  overflow-wrap: break-word;
+}
+
+/* =========================================================
+   DYNAMIC THEME UTILITIES
+   ========================================================= */
+
+.theme-text {
+  color: var(--theme-primary);
+}
+
+.theme-bg {
+  background-color: var(--theme-primary);
+}
+
+.theme-border {
+  border-color: var(--theme-primary);
+}
+
+.theme-glow {
+  box-shadow:
+    0 0 30px rgba(var(--theme-rgb), 0.25);
+}
+
+.theme-glow-strong {
+  box-shadow:
+    0 0 40px rgba(var(--theme-rgb), 0.4);
+}
+
+/* =========================================================
+   SELECTION
+   ========================================================= */
+
+::selection {
+  background-color: rgba(var(--theme-rgb), 0.25);
+  color: white;
+}
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #020617;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--theme-rgb), 0.45);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-primary);
+}
+
+/* =========================================================
+   MOBILE RESPONSIVENESS
+   ========================================================= */
+
+@media (max-width: 640px) {
+  html,
+  body,
+  #root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    font-size: 15px;
+  }
+}
+
+/* =========================================================
+   REDUCE MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

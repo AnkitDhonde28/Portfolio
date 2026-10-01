@@ -9,7 +9,13 @@ export default function Certifications() {
             className="relative overflow-hidden bg-[#020617] pt-16 pb-24"
         >
             {/* Background Glow */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(34,211,238,.05),transparent_70%)]" />
+            <div
+                className="absolute inset-0"
+                style={{
+                    background:
+                        "radial-gradient(circle at center, rgba(var(--theme-rgb), 0.05), transparent 70%)",
+                }}
+            />
 
             <div className="relative z-10 mx-auto max-w-7xl px-6">
                 <SectionTitle
@@ -23,12 +29,14 @@ export default function Certifications() {
                 {portfolio.certifications.length === 1 ? (
                     <div className="mt-20 flex justify-center">
                         <div className="w-full max-w-md">
-                            <CertificateCard cert={portfolio.certifications[0]} />
+                            <CertificateCard
+                                cert={portfolio.certifications[0]}
+                            />
                         </div>
                     </div>
                 ) : (
                     /* Automatically switches to grid when you add more certificates */
-                    <div className="mt-20 grid gap-8 md:grid-cols-2 grid md:grid-cols-2 xl:grid-cols-3 gap-10 items-stretch">
+                    <div className="mt-20 grid items-stretch gap-10 md:grid-cols-2 xl:grid-cols-3">
                         {portfolio.certifications.map((cert) => (
                             <CertificateCard
                                 key={cert.title}

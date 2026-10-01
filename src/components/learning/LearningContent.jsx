@@ -17,7 +17,13 @@ function List({ items }) {
                     key={index}
                     className="flex gap-3 text-[16px] leading-7 text-slate-400"
                 >
-                    <span className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-400" />
+                    <span
+                        className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full"
+                        style={{
+                            backgroundColor:
+                                "var(--theme-primary)",
+                        }}
+                    />
 
                     <span>{item}</span>
                 </li>
@@ -67,7 +73,17 @@ function CodeBlock({ title, language, code }) {
 
                     <button
                         onClick={copyCode}
-                        className="rounded-md border border-slate-700 px-2.5 py-1 text-xs text-slate-400 transition hover:border-cyan-400/40 hover:text-cyan-400"
+                        className="rounded-md border border-slate-700 px-2.5 py-1 text-xs text-slate-400 transition"
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor =
+                                "rgba(var(--theme-rgb), 0.40)";
+                            e.currentTarget.style.color =
+                                "var(--theme-primary)";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = "";
+                            e.currentTarget.style.color = "";
+                        }}
                     >
                         {copied ? "Copied ✓" : "Copy"}
                     </button>
@@ -86,26 +102,33 @@ function InfoBox({ variant, title, text }) {
     const config = {
         concept: {
             icon: "💡",
-            border: "border-cyan-400/10",
-            background: "bg-cyan-400/[0.05]",
+            border:
+                "rgba(var(--theme-rgb), 0.10)",
+            background:
+                "rgba(var(--theme-rgb), 0.05)",
+            iconColor:
+                "var(--theme-primary)",
         },
 
         tip: {
             icon: "✓",
-            border: "border-emerald-400/10",
-            background: "bg-emerald-400/[0.05]",
+            border: "rgba(52, 211, 153, 0.10)",
+            background: "rgba(52, 211, 153, 0.05)",
+            iconColor: "#34d399",
         },
 
         warning: {
             icon: "⚠",
-            border: "border-amber-400/10",
-            background: "bg-amber-400/[0.05]",
+            border: "rgba(251, 191, 36, 0.10)",
+            background: "rgba(251, 191, 36, 0.05)",
+            iconColor: "#fbbf24",
         },
 
         next: {
             icon: "→",
-            border: "border-violet-400/10",
-            background: "bg-violet-400/[0.05]",
+            border: "rgba(167, 139, 250, 0.10)",
+            background: "rgba(167, 139, 250, 0.05)",
+            iconColor: "#a78bfa",
         },
     };
 
@@ -113,10 +136,21 @@ function InfoBox({ variant, title, text }) {
 
     return (
         <div
-            className={`mt-8 rounded-xl border ${style.border} ${style.background} p-5 sm:p-6`}
+            className="mt-8 rounded-xl border p-5 sm:p-6"
+            style={{
+                borderColor: style.border,
+                backgroundColor: style.background,
+            }}
         >
             <div className="flex gap-4">
-                <span className="text-lg">{style.icon}</span>
+                <span
+                    className="text-lg"
+                    style={{
+                        color: style.iconColor,
+                    }}
+                >
+                    {style.icon}
+                </span>
 
                 <div>
                     <h4 className="font-semibold text-white">
@@ -132,7 +166,11 @@ function InfoBox({ variant, title, text }) {
     );
 }
 
-function ArchitectureImage({ image, alt, caption }) {
+function ArchitectureImage({
+    image,
+    alt,
+    caption,
+}) {
     return (
         <figure className="mt-10">
             <div className="overflow-hidden rounded-xl border border-slate-800 bg-[#080d19] p-2 sm:p-3">
@@ -158,17 +196,28 @@ function SectionHeading({ section }) {
         <div className="group">
             <div className="flex items-center gap-3">
                 <h2
-                    className={`font-bold tracking-tight text-white ${section.parent
-                        ? "text-2xl sm:text-3xl"
-                        : "text-3xl sm:text-4xl"
-                        }`}
+                    className={`font-bold tracking-tight text-white ${
+                        section.parent
+                            ? "text-2xl sm:text-3xl"
+                            : "text-3xl sm:text-4xl"
+                    }`}
                 >
                     {section.title}
                 </h2>
 
                 <a
                     href={`#${section.id}`}
-                    className="text-sm text-slate-700 opacity-0 transition group-hover:opacity-100 hover:text-cyan-400"
+                    className="text-sm text-slate-700 opacity-0 transition group-hover:opacity-100"
+                    style={{
+                        color: undefined,
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.color =
+                            "var(--theme-primary)";
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.color = "";
+                    }}
                     aria-label={`Link to ${section.title}`}
                 >
                     #
@@ -191,7 +240,15 @@ function LearningSummary({ title, items }) {
                         key={index}
                         className="flex items-center gap-3 rounded-lg border border-slate-800/80 bg-slate-950/40 px-4 py-3"
                     >
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-400/10 text-xs text-cyan-400">
+                        <span
+                            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs"
+                            style={{
+                                backgroundColor:
+                                    "rgba(var(--theme-rgb), 0.10)",
+                                color:
+                                    "var(--theme-primary)",
+                            }}
+                        >
                             ✓
                         </span>
 
@@ -211,10 +268,20 @@ function RenderContent({ content }) {
             {content?.map((block, index) => {
                 switch (block.type) {
                     case "paragraph":
-                        return <Paragraph key={index} text={block.text} />;
+                        return (
+                            <Paragraph
+                                key={index}
+                                text={block.text}
+                            />
+                        );
 
                     case "list":
-                        return <List key={index} items={block.items} />;
+                        return (
+                            <List
+                                key={index}
+                                items={block.items}
+                            />
+                        );
 
                     case "code":
                         return (
@@ -263,17 +330,28 @@ function RenderContent({ content }) {
     );
 }
 
-export default function LearningContent({ sections }) {
+export default function LearningContent({
+    sections,
+}) {
     return (
         <article className="min-w-0">
             {sections
-                .filter((section) => section.type !== "group")
+                .filter(
+                    (section) =>
+                        section.type !== "group"
+                )
                 .map((section, index) => (
                     <motion.section
                         key={section.id}
                         id={section.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
+                        initial={{
+                            opacity: 0,
+                            y: 20,
+                        }}
+                        whileInView={{
+                            opacity: 1,
+                            y: 0,
+                        }}
                         viewport={{
                             once: true,
                             margin: "-80px",
@@ -284,9 +362,13 @@ export default function LearningContent({ sections }) {
                         }}
                         className="scroll-mt-28 border-b border-slate-800/70 pb-16 pt-4 last:border-b-0"
                     >
-                        <SectionHeading section={section} />
+                        <SectionHeading
+                            section={section}
+                        />
 
-                        <RenderContent content={section.content} />
+                        <RenderContent
+                            content={section.content}
+                        />
                     </motion.section>
                 ))}
         </article>
