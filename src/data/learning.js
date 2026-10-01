@@ -142,7 +142,7 @@ const learning = [
       "Database Communication",
     ],
 
-    linkedin: "#",
+    linkedin: "https://lnkd.in/p/dVDHZxgD",
   },
 ];
 
