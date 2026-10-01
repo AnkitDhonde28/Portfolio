@@ -111,6 +111,39 @@ const learning = [
 
     linkedin: "#",
   },
+
+  {
+    id: "what-happens-when-you-open-a-website",
+    title: "What Actually Happens When You Open a Website?",
+    category: "Cloud & DevOps",
+    status: "Currently Learning",
+    date: "October 2026",
+
+    description:
+      "Following a web request from the browser through DNS, TCP, TLS, HTTP, load balancers, reverse proxies, application servers, and databases to understand how the complete request journey works.",
+
+    technologies: [
+      "DNS",
+      "HTTP",
+      "TCP",
+      "TLS",
+      "Nginx",
+      "Networking",
+    ],
+
+    topics: [
+      "DNS Resolution",
+      "TCP Connection",
+      "TLS Handshake",
+      "HTTP Requests",
+      "Load Balancers",
+      "Reverse Proxies",
+      "Application Servers",
+      "Database Communication",
+    ],
+
+    linkedin: "#",
+  },
 ];
 
 export default learning;

@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 import argoCd from "../data/learningDetails/argoCd";
+import webRequestJourney from "../data/learningDetails/webRequestJourney";
 
 import LearningSidebar from "../components/learning/LearningSidebar";
 import LearningContent from "../components/learning/LearningContent";
 
 const learningArticles = {
     "argo-cd-gitops": argoCd,
+    "what-happens-when-you-open-a-website": webRequestJourney,
 };
 
 function MobileTableOfContents({
@@ -50,13 +52,15 @@ function MobileTableOfContents({
                                     onClick={() =>
                                         scrollToSection(section.id)
                                     }
-                                    className={`block w-full py-2 text-left text-sm ${activeSection === section.id
-                                        ? "text-cyan-400"
-                                        : "text-slate-500"
-                                        } ${section.parent
+                                    className={`block w-full py-2 text-left text-sm ${
+                                        activeSection === section.id
+                                            ? "text-cyan-400"
+                                            : "text-slate-500"
+                                    } ${
+                                        section.parent
                                             ? "pl-4"
                                             : ""
-                                        }`}
+                                    }`}
                                 >
                                     {section.title}
                                 </button>
@@ -232,7 +236,6 @@ export default function LearningDetails() {
                     </div>
                 </motion.header>
 
-                {/* Documentation Layout */}
                 {/* Quick Overview */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -251,14 +254,12 @@ export default function LearningDetails() {
                             </h2>
 
                             <p className="mt-3 leading-7 text-slate-400">
-                                This article breaks down how Argo CD works internally,
-                                how GitOps is implemented with Kubernetes, how desired
-                                and actual state are compared, and how applications are
-                                synchronized with the cluster.
+                                {article.description}
                             </p>
                         </div>
                     </div>
                 </motion.div>
+
                 {/* Mobile Table of Contents */}
                 <MobileTableOfContents
                     sections={article.sections}
