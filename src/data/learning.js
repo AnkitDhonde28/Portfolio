@@ -57,6 +57,36 @@ const learning = [
   },
 
   {
+    id: "pod-vs-container-vs-node",
+    title: "Pod vs Container vs Node — Explained Visually",
+    category: "Cloud & DevOps",
+    status: "Practicing",
+    date: "October 2026",
+
+    description:
+      "A beginner-friendly visual guide to understanding containers, Pods, Nodes, and how they fit together inside a Kubernetes cluster.",
+
+    technologies: [
+      "Kubernetes",
+      "Docker",
+      "Pods",
+      "Nodes",
+    ],
+
+    topics: [
+      "Containers",
+      "Pods",
+      "Nodes",
+      "Kubernetes Cluster",
+      "Pod Failure",
+      "Node Failure",
+      "Scaling",
+    ],
+
+    linkedin: "#",
+  },
+
+  {
     id: "terraform",
     title: "Terraform & Infrastructure as Code",
     category: "Infrastructure",

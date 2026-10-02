@@ -38,7 +38,7 @@ const argoCd = {
 
                 {
                     type: "architecture",
-                    image: "/learning/argo-cd-architecture.png",
+                    image: "/learning/agro/argo-cd-architecture.png",
                     alt: "Argo CD architecture showing Git, Argo CD components and Kubernetes",
                     caption:
                         "High-level architecture showing Git as the source of truth and Argo CD managing the desired state of Kubernetes applications.",
@@ -100,7 +100,7 @@ const argoCd = {
 
                 {
                     type: "architecture",
-                    image: "/learning/argo-cd-architecture.png",
+                    image: "/learning/agro/argo-cd-architecture.png",
                     alt: "Detailed Argo CD architecture",
                     caption: "Argo CD components and their relationship with Git and Kubernetes.",
                 },
@@ -191,7 +191,7 @@ const argoCd = {
 
                 {
                     type: "architecture",
-                    image: "/learning/argo-cd-repo-server.png",
+                    image: "/learning/agro/argo-cd-repo-server.png",
                     alt: "Argo CD repository server workflow",
                     caption:
                         "The Repository Server retrieves configuration from Git and generates the manifests required by Argo CD.",
@@ -213,7 +213,7 @@ const argoCd = {
 
                 {
                     type: "architecture",
-                    image: "/learning/argo-cd-reconciliation.png",
+                    image: "/learning/agro/argo-cd-reconciliation.png",
                     alt: "Argo CD reconciliation process",
                     caption:
                         "The Application Controller compares desired and actual state and performs reconciliation.",
@@ -239,7 +239,7 @@ const argoCd = {
 
                 {
                     type: "architecture",
-                    image: "/learning/desired-vs-actual.png",
+                    image: "/learning/agro/desired-vs-actual.png",
                     alt: "Desired state and actual state comparison",
                     caption:
                         "Argo CD compares the desired state defined in Git with the actual state running in Kubernetes.",
@@ -277,7 +277,7 @@ const argoCd = {
 
                 {
                     type: "architecture",
-                    image: "/learning/argo-cd-sync.png",
+                    image: "/learning/agro/argo-cd-sync.png",
                     alt: "Argo CD application synchronization workflow",
                     caption:
                         "A simplified synchronization workflow from Git to Kubernetes.",

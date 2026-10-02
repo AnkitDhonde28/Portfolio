@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 
 import argoCd from "../data/learningDetails/argoCd";
 import webRequestJourney from "../data/learningDetails/webRequestJourney";
+import podVsContainerVsNode from "../data/learningDetails/podVsContainerVsNode";
 
 import LearningSidebar from "../components/learning/LearningSidebar";
 import LearningContent from "../components/learning/LearningContent";
@@ -10,6 +11,7 @@ import LearningContent from "../components/learning/LearningContent";
 const learningArticles = {
   "argo-cd-gitops": argoCd,
   "what-happens-when-you-open-a-website": webRequestJourney,
+  "pod-vs-container-vs-node": podVsContainerVsNode,
 };
 
 function MobileTableOfContents({

@@ -41,7 +41,7 @@ const webRequestJourney = {
 
                 {
                     type: "architecture",
-                    image: "/learning/web-request-journey.png",
+                    image: "/learning/web/web-request-journey.png",
                     alt: "Web request journey from browser through DNS, load balancer, reverse proxy, application and database",
                     caption:
                         "A simplified view of the journey from a user's browser to the backend application and database.",
@@ -69,7 +69,7 @@ const webRequestJourney = {
 
                 {
                     type: "architecture",
-                    image: "/learning/dns-resolution.png",
+                    image: "/learning/web/dns-resolution.png",
                     alt: "DNS resolution from browser to DNS resolver and IP address",
                     caption:
                         "DNS translates a domain name into an address that the client can use to reach the destination.",
@@ -115,7 +115,7 @@ const webRequestJourney = {
 
                 {
                     type: "architecture",
-                    image: "/learning/tcp-handshake.png",
+                    image: "/learning/web/tcp-handshake.png",
                     alt: "TCP three way handshake showing SYN SYN-ACK and ACK",
                     caption:
                         "A simplified TCP three-way handshake between the client and server.",
@@ -151,7 +151,7 @@ const webRequestJourney = {
 
                 {
                     type: "architecture",
-                    image: "/learning/tls-handshake.png",
+                    image: "/learning/web/tls-handshake.png",
                     alt: "Simplified TLS handshake between browser and server",
                     caption:
                         "HTTPS adds TLS to the network connection so HTTP traffic can be exchanged securely.",
@@ -225,7 +225,7 @@ Accept: text/html`,
 
                 {
                     type: "architecture",
-                    image: "/learning/load-balancer.png",
+                    image: "/learning/web/load-balancer.png",
                     alt: "Load balancer distributing traffic across multiple application servers",
                     caption:
                         "A load balancer distributes incoming requests across available backend instances.",
@@ -265,7 +265,7 @@ Accept: text/html`,
 
                 {
                     type: "architecture",
-                    image: "/learning/nginx-reverse-proxy.png",
+                    image: "/learning/web/nginx-reverse-proxy.png",
                     alt: "Nginx reverse proxy forwarding HTTPS traffic to an application server",
                     caption:
                         "Nginx receives the public request and forwards it to an internal application process.",
@@ -344,7 +344,7 @@ FROM users;`,
 
                 {
                     type: "architecture",
-                    image: "/learning/application-database.png",
+                    image: "/learning/web/application-database.png",
                     alt: "Application server communicating with a database",
                     caption:
                         "The application can depend on the database to retrieve or persist information required for a request.",
@@ -372,7 +372,7 @@ FROM users;`,
 
                 {
                     type: "architecture",
-                    image: "/learning/web-response-path.png",
+                    image: "/learning/web/web-response-path.png",
                     alt: "HTTP response traveling from application back to browser",
                     caption:
                         "The response travels from the application through the infrastructure and back to the browser.",
@@ -410,7 +410,7 @@ FROM users;`,
 
                 {
                     type: "architecture",
-                    image: "/learning/web-troubleshooting-map.png",
+                    image: "/learning/web/web-troubleshooting-map.png",
                     alt: "Troubleshooting map for a web request from DNS to database",
                     caption:
                         "A troubleshooting map that follows the request through each major infrastructure layer.",
@@ -451,7 +451,7 @@ FROM users;`,
 
                 {
                     type: "architecture",
-                    image: "/learning/502-debugging.png",
+                    image: "/learning/web/502-debugging.png",
                     alt: "Troubleshooting a 502 error between Nginx and an upstream application",
                     caption:
                         "A simplified investigation of a 502 response by checking the reverse proxy and upstream application.",
