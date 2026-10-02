@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createClient } from "@supabase/supabase-js";
 
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
@@ -22,7 +23,25 @@ import DeploymentPipeline from "./sections/DeploymentPipeline";
 import AwsArchitecture from "./sections/AwsArchitecture";
 import IncidentLab from "./sections/IncidentLab";
 
+import SubscribeModal from "./components/ui/SubscribeModal";
+
 import { ThemeProvider } from "./context/ThemeContext";
+
+import AdminLogin from "./pages/AdminLogin";
+import AdminSubscribers from "./pages/AdminSubscribers";
+
+/* =========================================================
+   SUPABASE CLIENT
+========================================================= */
+
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
+);
+
+/* =========================================================
+   APP CONTENT
+========================================================= */
 
 function AppContent() {
   const [currentPath, setCurrentPath] = useState(
@@ -33,6 +52,40 @@ function AppContent() {
     useState(
       window.location.hash.startsWith("#learning/")
     );
+
+  const [session, setSession] = useState(null);
+
+  const [loadingSession, setLoadingSession] = useState(true);
+
+  /* =========================================================
+     GET SUPABASE SESSION
+  ========================================================= */
+
+  useEffect(() => {
+    const getSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      setSession(session);
+      setLoadingSession(false);
+    };
+
+    getSession();
+
+    /* Listen for login/logout */
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+      }
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   /* =========================================================
      HANDLE BROWSER NAVIGATION
@@ -90,55 +143,146 @@ function AppContent() {
   };
 
   /* =========================================================
-     PAGE ROUTING
+     ADMIN ROUTES
+  ========================================================= */
+
+  const isAdminRoute =
+    currentPath === "/admin" ||
+    currentPath === "/admin/" ||
+    currentPath === "/admin/subscribers";
+
+  /* =========================================================
+     ADMIN PAGE
+  ========================================================= */
+
+  const renderAdminPage = () => {
+    /* Wait for Supabase session */
+    if (loadingSession) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-slate-950 text-cyan-400">
+          <div className="text-sm tracking-widest uppercase">
+            Loading admin...
+          </div>
+        </div>
+      );
+    }
+
+    /* =======================================================
+       ADMIN LOGIN
+    ======================================================= */
+
+    if (
+      currentPath === "/admin" ||
+      currentPath === "/admin/"
+    ) {
+      if (session) {
+        navigateTo("/admin/subscribers");
+        return null;
+      }
+
+      return (
+        <AdminLogin
+          onLogin={(newSession) => {
+            setSession(newSession);
+
+            window.history.pushState(
+              {},
+              "",
+              "/admin/subscribers"
+            );
+
+            setCurrentPath("/admin/subscribers");
+          }}
+        />
+      );
+    }
+
+    /* =======================================================
+       ADMIN SUBSCRIBERS
+    ======================================================= */
+
+    if (currentPath === "/admin/subscribers") {
+      if (!session) {
+        return (
+          <AdminLogin
+            onLogin={(newSession) => {
+              setSession(newSession);
+
+              window.history.pushState(
+                {},
+                "",
+                "/admin/subscribers"
+              );
+
+              setCurrentPath("/admin/subscribers");
+            }}
+          />
+        );
+      }
+
+      return (
+        <AdminSubscribers
+          session={session}
+          onLogout={async () => {
+            await supabase.auth.signOut();
+
+            setSession(null);
+
+            window.history.pushState(
+              {},
+              "",
+              "/admin"
+            );
+
+            setCurrentPath("/admin");
+          }}
+        />
+      );
+    }
+
+    return null;
+  };
+
+  /* =========================================================
+     NORMAL PORTFOLIO ROUTING
   ========================================================= */
 
   const renderPage = () => {
-    /*
-     * =======================================================
-     * CI/CD PIPELINE
-     * =======================================================
-     */
+    /* =======================================================
+       CI/CD PIPELINE
+    ======================================================= */
 
     if (currentPath === "/pipeline") {
       return <DeploymentPipeline />;
     }
 
-    /*
-     * =======================================================
-     * AWS ARCHITECTURE
-     * =======================================================
-     */
+    /* =======================================================
+       AWS ARCHITECTURE
+    ======================================================= */
 
     if (currentPath === "/aws-architecture") {
       return <AwsArchitecture />;
     }
 
-    /*
-     * =======================================================
-     * DEVOPS INCIDENT LAB
-     * =======================================================
-     */
+    /* =======================================================
+       DEVOPS INCIDENT LAB
+    ======================================================= */
 
     if (currentPath === "/incident-lab") {
       return <IncidentLab />;
     }
 
-    /*
-     * =======================================================
-     * LEARNING DETAILS
-     * =======================================================
-     */
+    /* =======================================================
+       LEARNING DETAILS
+    ======================================================= */
 
     if (isLearningDetails) {
       return <LearningDetails />;
     }
 
-    /*
-     * =======================================================
-     * MAIN HOME PAGE
-     * =======================================================
-     */
+    /* =======================================================
+       MAIN HOME PAGE
+    ======================================================= */
 
     return (
       <>
@@ -164,7 +308,15 @@ function AppContent() {
   };
 
   /* =========================================================
-     APP
+     ADMIN UI
+  ========================================================= */
+
+  if (isAdminRoute) {
+    return renderAdminPage();
+  }
+
+  /* =========================================================
+     PUBLIC PORTFOLIO UI
   ========================================================= */
 
   return (
@@ -186,9 +338,15 @@ function AppContent() {
       <Terminal />
 
       <FloatingTools />
+
+      <SubscribeModal />
     </>
   );
 }
+
+/* =========================================================
+   APP
+========================================================= */
 
 export default function App() {
   return (
