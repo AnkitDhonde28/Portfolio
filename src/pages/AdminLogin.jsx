@@ -1,11 +1,7 @@
 import { useState } from "react";
-import { createClient } from "@supabase/supabase-js";
 import { motion } from "framer-motion";
 
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
-);
+import { supabase } from "../lib/supabase";
 
 export default function AdminLogin({ onLogin }) {
   const [email, setEmail] = useState("");
@@ -20,28 +16,68 @@ export default function AdminLogin({ onLogin }) {
     setLoading(true);
     setError("");
 
-    const { data, error } =
-      await supabase.auth.signInWithPassword({
-        email,
+    const cleanEmail = email.trim();
+
+    try {
+      const {
+        data,
+        error: loginError,
+      } = await supabase.auth.signInWithPassword({
+        email: cleanEmail,
         password,
       });
 
-    if (error) {
-      setError("Invalid email or password.");
+      if (loginError) {
+        console.error(
+          "Supabase login error:",
+          loginError
+        );
+
+        setError(
+          loginError.message ||
+            "Invalid email or password."
+        );
+
+        setLoading(false);
+        return;
+      }
+
+      if (!data?.session) {
+        setError(
+          "Login succeeded but no session was returned."
+        );
+
+        setLoading(false);
+        return;
+      }
+
+      onLogin(data.session);
+    } catch (err) {
+      console.error(
+        "Unexpected login error:",
+        err
+      );
+
+      setError(
+        err?.message ||
+          "Something went wrong while signing in."
+      );
+    } finally {
       setLoading(false);
-      return;
     }
-
-    onLogin(data.session);
-
-    setLoading(false);
   };
 
   return (
     <section className="min-h-screen bg-[#020617] flex items-center justify-center px-4">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{
+          opacity: 0,
+          y: 20,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
         className="
           w-full
           max-w-md
@@ -53,6 +89,8 @@ export default function AdminLogin({ onLogin }) {
           shadow-2xl
         "
       >
+        {/* ICON */}
+
         <div
           className="
             mx-auto
@@ -74,18 +112,24 @@ export default function AdminLogin({ onLogin }) {
           🔐
         </div>
 
+        {/* TITLE */}
+
         <h1 className="text-center text-2xl font-bold text-white">
           Admin Dashboard
         </h1>
 
         <p className="mt-2 text-center text-sm text-slate-500">
-          Sign in to manage your subscribers.
+          Sign in to manage your subscribers and articles.
         </p>
+
+        {/* FORM */}
 
         <form
           onSubmit={handleLogin}
           className="mt-8 space-y-5"
         >
+          {/* EMAIL */}
+
           <div>
             <label className="mb-2 block text-sm text-slate-400">
               Email
@@ -94,6 +138,7 @@ export default function AdminLogin({ onLogin }) {
             <input
               type="email"
               required
+              autoComplete="email"
               value={email}
               onChange={(e) =>
                 setEmail(e.target.value)
@@ -114,6 +159,8 @@ export default function AdminLogin({ onLogin }) {
             />
           </div>
 
+          {/* PASSWORD */}
+
           <div>
             <label className="mb-2 block text-sm text-slate-400">
               Password
@@ -122,6 +169,7 @@ export default function AdminLogin({ onLogin }) {
             <input
               type="password"
               required
+              autoComplete="current-password"
               value={password}
               onChange={(e) =>
                 setPassword(e.target.value)
@@ -142,20 +190,26 @@ export default function AdminLogin({ onLogin }) {
             />
           </div>
 
+          {/* ERROR */}
+
           {error && (
-            <div className="
-              rounded-lg
-              border
-              border-red-500/20
-              bg-red-500/5
-              px-4
-              py-3
-              text-sm
-              text-red-400
-            ">
+            <div
+              className="
+                rounded-lg
+                border
+                border-red-500/20
+                bg-red-500/5
+                px-4
+                py-3
+                text-sm
+                text-red-400
+              "
+            >
               {error}
             </div>
           )}
+
+          {/* BUTTON */}
 
           <button
             type="submit"
@@ -169,6 +223,7 @@ export default function AdminLogin({ onLogin }) {
               text-slate-950
               transition
               hover:scale-[1.01]
+              disabled:cursor-not-allowed
               disabled:opacity-60
             "
             style={{
@@ -176,7 +231,9 @@ export default function AdminLogin({ onLogin }) {
                 "var(--theme-primary)",
             }}
           >
-            {loading ? "Signing in..." : "Sign In →"}
+            {loading
+              ? "Signing in..."
+              : "Sign In →"}
           </button>
         </form>
       </motion.div>

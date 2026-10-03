@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+
+import { supabase } from "./lib/supabase";
 
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
@@ -29,15 +30,8 @@ import { ThemeProvider } from "./context/ThemeContext";
 
 import AdminLogin from "./pages/AdminLogin";
 import AdminSubscribers from "./pages/AdminSubscribers";
-
-/* =========================================================
-   SUPABASE CLIENT
-========================================================= */
-
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
-);
+import AdminArticles from "./pages/AdminArticles";
+import AdminArticleEditor from "./pages/AdminArticleEditor";
 
 /* =========================================================
    APP CONTENT
@@ -55,48 +49,82 @@ function AppContent() {
 
   const [session, setSession] = useState(null);
 
-  const [loadingSession, setLoadingSession] = useState(true);
+  const [loadingSession, setLoadingSession] =
+    useState(true);
 
-  /* =========================================================
+  /* =======================================================
      GET SUPABASE SESSION
-  ========================================================= */
+  ======================================================= */
 
   useEffect(() => {
-    const getSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+    let mounted = true;
 
-      setSession(session);
-      setLoadingSession(false);
+    const getSession = async () => {
+      try {
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
+
+        if (error) {
+          console.error(
+            "Supabase getSession error:",
+            error
+          );
+        }
+
+        if (mounted) {
+          setSession(session);
+          setLoadingSession(false);
+        }
+      } catch (error) {
+        console.error(
+          "Session initialization error:",
+          error
+        );
+
+        if (mounted) {
+          setLoadingSession(false);
+        }
+      }
     };
 
     getSession();
 
-    /* Listen for login/logout */
+    /* =====================================================
+       AUTH STATE LISTENER
+    ===================================================== */
+
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        setSession(session);
+        if (mounted) {
+          setSession(session);
+        }
       }
     );
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     };
   }, []);
 
-  /* =========================================================
+  /* =======================================================
      HANDLE BROWSER NAVIGATION
-  ========================================================= */
+  ======================================================= */
 
   useEffect(() => {
     const handleNavigation = () => {
-      setCurrentPath(window.location.pathname);
+      setCurrentPath(
+        window.location.pathname
+      );
 
       setIsLearningDetails(
-        window.location.hash.startsWith("#learning/")
+        window.location.hash.startsWith(
+          "#learning/"
+        )
       );
     };
 
@@ -125,12 +153,16 @@ function AppContent() {
     };
   }, []);
 
-  /* =========================================================
-     NAVIGATE TO SEPARATE PAGE
-  ========================================================= */
+  /* =======================================================
+     NAVIGATE TO PAGE
+  ======================================================= */
 
   const navigateTo = (path) => {
-    window.history.pushState({}, "", path);
+    window.history.pushState(
+      {},
+      "",
+      path
+    );
 
     setCurrentPath(path);
 
@@ -142,21 +174,84 @@ function AppContent() {
     });
   };
 
-  /* =========================================================
+  /* =======================================================
      ADMIN ROUTES
-  ========================================================= */
+  ======================================================= */
 
   const isAdminRoute =
     currentPath === "/admin" ||
     currentPath === "/admin/" ||
-    currentPath === "/admin/subscribers";
+    currentPath === "/admin/subscribers" ||
+    currentPath === "/admin/articles" ||
+    currentPath === "/admin/articles/new" ||
+    currentPath.startsWith(
+      "/admin/articles/"
+    );
 
-  /* =========================================================
+  /* =======================================================
+     ADMIN LOGIN
+  ======================================================= */
+
+  const handleLogin = (newSession) => {
+    setSession(newSession);
+
+    window.history.pushState(
+      {},
+      "",
+      "/admin/subscribers"
+    );
+
+    setCurrentPath(
+      "/admin/subscribers"
+    );
+  };
+
+  /* =======================================================
+     ADMIN LOGOUT
+  ======================================================= */
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error(
+        "Supabase logout error:",
+        error
+      );
+    }
+
+    setSession(null);
+
+    window.history.pushState(
+      {},
+      "",
+      "/admin"
+    );
+
+    setCurrentPath("/admin");
+  };
+
+  /* =======================================================
+     LOGIN PAGE
+  ======================================================= */
+
+  const renderLogin = () => {
+    return (
+      <AdminLogin
+        onLogin={handleLogin}
+      />
+    );
+  };
+
+  /* =======================================================
      ADMIN PAGE
-  ========================================================= */
+  ======================================================= */
 
   const renderAdminPage = () => {
-    /* Wait for Supabase session */
+    /* =====================================================
+       WAIT FOR SESSION
+    ===================================================== */
+
     if (loadingSession) {
       return (
         <div className="min-h-screen flex items-center justify-center bg-slate-950 text-cyan-400">
@@ -167,75 +262,104 @@ function AppContent() {
       );
     }
 
-    /* =======================================================
+    /* =====================================================
        ADMIN LOGIN
-    ======================================================= */
+    ===================================================== */
 
     if (
       currentPath === "/admin" ||
       currentPath === "/admin/"
     ) {
       if (session) {
-        navigateTo("/admin/subscribers");
+        window.history.replaceState(
+          {},
+          "",
+          "/admin/subscribers"
+        );
+
+        setCurrentPath(
+          "/admin/subscribers"
+        );
+
         return null;
       }
 
+      return renderLogin();
+    }
+
+    /* =====================================================
+       PROTECTED ADMIN ROUTES
+    ===================================================== */
+
+    if (!session) {
+      return renderLogin();
+    }
+
+    /* =====================================================
+       SUBSCRIBERS
+    ===================================================== */
+
+    if (
+      currentPath === "/admin/subscribers"
+    ) {
       return (
-        <AdminLogin
-          onLogin={(newSession) => {
-            setSession(newSession);
-
-            window.history.pushState(
-              {},
-              "",
-              "/admin/subscribers"
-            );
-
-            setCurrentPath("/admin/subscribers");
-          }}
+        <AdminSubscribers
+          session={session}
+          onLogout={handleLogout}
         />
       );
     }
 
-    /* =======================================================
-       ADMIN SUBSCRIBERS
-    ======================================================= */
+    /* =====================================================
+       ARTICLES LIST
+    ===================================================== */
 
-    if (currentPath === "/admin/subscribers") {
-      if (!session) {
-        return (
-          <AdminLogin
-            onLogin={(newSession) => {
-              setSession(newSession);
+    if (
+      currentPath === "/admin/articles"
+    ) {
+      return (
+        <AdminArticles
+          session={session}
+          onLogout={handleLogout}
+        />
+      );
+    }
 
-              window.history.pushState(
-                {},
-                "",
-                "/admin/subscribers"
-              );
+    /* =====================================================
+       NEW ARTICLE
+    ===================================================== */
 
-              setCurrentPath("/admin/subscribers");
-            }}
-          />
-        );
-      }
+    if (
+      currentPath === "/admin/articles/new"
+    ) {
+      return (
+        <AdminArticleEditor
+          session={session}
+          onLogout={handleLogout}
+        />
+      );
+    }
+
+    /* =====================================================
+       EDIT ARTICLE
+       /admin/articles/:id
+    ===================================================== */
+
+    if (
+      currentPath.startsWith(
+        "/admin/articles/"
+      )
+    ) {
+      const articleId =
+        currentPath.split(
+          "/admin/articles/"
+        )[1];
 
       return (
-        <AdminSubscribers
+        <AdminArticleEditor
           session={session}
-          onLogout={async () => {
-            await supabase.auth.signOut();
-
-            setSession(null);
-
-            window.history.pushState(
-              {},
-              "",
-              "/admin"
-            );
-
-            setCurrentPath("/admin");
-          }}
+          articleId={articleId}
+          onLogout={handleLogout}
         />
       );
     }
@@ -248,41 +372,48 @@ function AppContent() {
   ========================================================= */
 
   const renderPage = () => {
-    /* =======================================================
-       CI/CD PIPELINE
-    ======================================================= */
+    /* =====================================================
+       DEPLOYMENT PIPELINE
+    ===================================================== */
 
-    if (currentPath === "/pipeline") {
+    if (
+      currentPath === "/pipeline"
+    ) {
       return <DeploymentPipeline />;
     }
 
-    /* =======================================================
+    /* =====================================================
        AWS ARCHITECTURE
-    ======================================================= */
+    ===================================================== */
 
-    if (currentPath === "/aws-architecture") {
+    if (
+      currentPath ===
+      "/aws-architecture"
+    ) {
       return <AwsArchitecture />;
     }
 
-    /* =======================================================
-       DEVOPS INCIDENT LAB
-    ======================================================= */
+    /* =====================================================
+       INCIDENT LAB
+    ===================================================== */
 
-    if (currentPath === "/incident-lab") {
+    if (
+      currentPath === "/incident-lab"
+    ) {
       return <IncidentLab />;
     }
 
-    /* =======================================================
+    /* =====================================================
        LEARNING DETAILS
-    ======================================================= */
+    ===================================================== */
 
     if (isLearningDetails) {
       return <LearningDetails />;
     }
 
-    /* =======================================================
-       MAIN HOME PAGE
-    ======================================================= */
+    /* =====================================================
+       HOME PAGE
+    ===================================================== */
 
     return (
       <>
@@ -308,7 +439,7 @@ function AppContent() {
   };
 
   /* =========================================================
-     ADMIN UI
+     ADMIN
   ========================================================= */
 
   if (isAdminRoute) {
@@ -316,22 +447,20 @@ function AppContent() {
   }
 
   /* =========================================================
-     PUBLIC PORTFOLIO UI
+     PORTFOLIO
   ========================================================= */
 
   return (
     <>
-      <Navbar onNavigate={navigateTo} />
+      <Navbar
+        onNavigate={navigateTo}
+      />
 
       <main className="pt-20">
         {renderPage()}
       </main>
 
       <Footer />
-
-      {/* =====================================================
-          GLOBAL UI TOOLS
-      ===================================================== */}
 
       <ColorCustomizer />
 
@@ -345,7 +474,7 @@ function AppContent() {
 }
 
 /* =========================================================
-   APP
+   ROOT APP
 ========================================================= */
 
 export default function App() {
